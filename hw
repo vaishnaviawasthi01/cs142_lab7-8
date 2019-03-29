@@ -189,6 +189,42 @@ class Node
 			else
 			{return search(cur->left,value);}
 		}
+			void binary_delete(Node * cur)
+			{
+				Node* temp=cur;
+				if(cur->right!=NULL)
+				{
+					temp=temp->right;
+					while(temp->left!=NULL)
+					{
+						temp=temp->left;
+					}
+					cur->data=temp->data;
+					if(temp->right!=NULL)
+					{binary_delete(temp);}
+					else
+				{
+					temp->parent->right=NULL;
+					delete temp;
+				}
+				}
+				else
+				{
+				temp=temp->left;
+				while(temp->right!=NULL)
+				{
+					temp=temp->right;
+				}
+				cur->data=temp->data;
+				if(temp->left!=NULL)
+				{binary_delete(temp);}
+				else
+				{
+					temp->parent->left=NULL;
+					delete temp;
+				}
+			}
+		}
 	};
 
 int main()
@@ -203,7 +239,7 @@ int main()
 	b1.insert(5);
 	b1.insert(67);
 	b1.insert(6);
-	
+	b1.binary_delete(b1.root);
 	cout<<b1.count(b1.root)<<endl;
 	cout<<"height="<<b1.height(b1.root)<<endl;
 	cout<<b1.rangeSearch(2,5)<<endl;
