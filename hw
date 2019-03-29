@@ -1,0 +1,211 @@
+#include <iostream>
+using namespace std;
+//create a class node=children
+class Node
+	{
+		public:
+		int data;
+		// Children
+		Node * left;
+		Node * right;
+		Node * parent;
+	
+		Node(int val)
+		{
+			//constructing node
+			data = val;
+			left = NULL;
+			right = NULL;
+			parent = NULL;
+		}
+	};
+//creating a class for binary search tree BiST
+	class BiST
+	{
+		public:
+		Node * root;
+		int Height;
+		BiST()
+		{
+			//constructing BiST
+			root = NULL;
+			Height=0;
+		}
+//adding functions
+
+//insert
+		void insert(int value)
+		{ insertHelper(root, value,1);}
+
+		void insertHelper(Node *curr, int value, int branch_length)
+		{
+			if (root == NULL)
+			{
+				root = new Node(value);
+				Height=1;
+			}
+			// Else compare the curr data with value
+			else if (value < curr->data)
+			{
+				// else move left and call insertH
+				if (curr->left == NULL)
+				{
+					curr->left = new Node(value);
+					curr->left->parent=curr;
+					if(branch_length==Height){Height++;}
+				}
+				else
+				{
+					branch_length++;
+					insertHelper(curr->left, value,branch_length);
+				}
+			}
+			else
+			{
+				// Else move right and call insertH
+				if (curr->right == NULL)
+				{
+					curr->right = new Node(value);
+					curr->right->parent=curr;
+					if(branch_length==Height){Height++;}
+				}
+				else
+				{
+					branch_length++;
+					insertHelper(curr->right, value,branch_length);
+				}
+			}
+  		}
+//find maximum in search tree	
+		Node * find_max(Node * curr)
+		{
+			if(root==NULL)
+			{
+				return NULL;
+			}
+			if(curr->right!=NULL)
+			{
+				return find_max(curr->right);
+			}
+			else
+			{
+				return curr;
+			}
+		}
+//find minimum in the search tree
+		Node * find_min(Node * curr)
+		{
+			if(root==NULL)
+			{
+				return NULL;
+			}
+			if(curr->left!=NULL)
+			{
+				return find_min(curr->left);
+			}
+			else
+			{
+				return curr;
+			}
+		}
+//search between 2 numbers and also tell the number of elements
+		int rangeSearch(int k1, int k2)
+		{
+			return rsHelper(root,k1,k2,0);
+		}
+	
+		int rsHelper(Node * curr,int k1, int k2,int c)
+		{
+			int a=0,b=0;
+			if(curr->left!=NULL)
+			{
+				a=rsHelper(curr->left,k1,k2,0);
+			}
+			if(curr->data<=k2 && curr->data>=k1)
+			{
+				cout<<curr->data<<",";
+				c++;
+			}
+			if(curr->right!=NULL)
+			{
+				b=rsHelper(curr->right,k1,k2,0);
+			}
+			if(curr->data==find_max(root)->data)
+			{
+				cout<<endl;
+			}
+			return a+b+c;
+		}
+//count elements
+		int count(Node * curr)
+		{
+			return counthelper(curr,0);
+		}
+	
+		int counthelper(Node * curr, int c)
+		{
+			int a=0,b=0;
+			c++;
+			if(curr->left!=NULL)
+			{
+				a=counthelper(curr->left,0);
+			}
+			if(curr->right!=NULL)
+			{
+				b=counthelper(curr->right,0);
+			}
+				return c+a+b;
+		}
+//height of the tree
+		int height(Node * curr)
+		{
+			return Height;
+		}
+//display	
+  		void display()
+			{displayHelper(root);}
+	
+  			void displayHelper(Node *curr)
+				{
+				// Base condition
+				if (curr == NULL)
+					return;
+				// Display left.
+				displayHelper(curr->left);
+				// Display current
+				cout << curr->data << ",";
+				// Display right
+				displayHelper(curr->right);
+				}
+	//search element
+	Node * search(Node * cur,int value)
+		{
+			if(cur==NULL)
+			{return NULL;}
+			if(cur->data==value)
+			{return cur;}
+			if(cur->data<value)
+			{return search(cur->right,value);}
+			else
+			{return search(cur->left,value);}
+		}
+	};
+
+int main()
+{
+	BiST b1;
+	b1.insert(4);
+	b1.insert(8);
+	b1.insert(2);
+	b1.insert(3);
+	b1.insert(1);
+	b1.insert(78);
+	b1.insert(5);
+	b1.insert(67);
+	b1.insert(6);
+	
+	cout<<b1.count(b1.root)<<endl;
+	cout<<"height="<<b1.height(b1.root)<<endl;
+	cout<<b1.rangeSearch(2,5)<<endl;
+	return 0;
+}
